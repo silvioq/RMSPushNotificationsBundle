@@ -277,9 +277,9 @@ class AppleNotification implements OSNotificationServiceInterface, EventListener
         if (!isset($this->apnStreams[$apnURL])) {
             // No stream found, setup a new stream
             $ctx = $this->getStreamContext();
-            $this->apnStreams[$apnURL] = stream_socket_client($apnURL, $err, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $ctx);
+            $this->apnStreams[$apnURL] = @stream_socket_client($apnURL, $err, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $ctx);
             if (!$this->apnStreams[$apnURL]) {
-                throw new \RuntimeException("Couldn't connect to APN server. Error no $err: $errstr");
+                throw new \RuntimeException("Couldn't connect to APN server at $apnUrl. Error no $err: $errstr");
             }
 
             // Reduce buffering and blocking
