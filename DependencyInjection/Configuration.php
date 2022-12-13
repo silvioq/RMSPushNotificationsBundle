@@ -20,9 +20,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('rms_push_notifications');
-        $this->root = \method_exists($treeBuilder, 'getRootNode')
-            ? $treeBuilder->getRootNode()
-            : $treeBuilder->root('rms_push_notifications');
+        $this->root = $treeBuilder->getRootNode(); /** @phpstan-ignore-line */
 
         $this->addAndroid();
         $this->addiOS();
@@ -38,7 +36,7 @@ class Configuration implements ConfigurationInterface
      */
     protected function addAndroid()
     {
-        $this->root->
+        $this->root-> /** @phpstan-ignore-line */
             children()->
                 arrayNode("android")->
                     canBeUnset()->
@@ -105,7 +103,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addApple($os)
     {
-        $config = $this->root->
+        $config = $this->root-> /** @phpstan-ignore-line */
             children()->
                 arrayNode($os)->
                     children()->
@@ -129,7 +127,7 @@ class Configuration implements ConfigurationInterface
      */
     protected function addBlackberry()
     {
-        $this->root->
+        $this->root-> /** @phpstan-ignore-line */
             children()->
                 arrayNode("blackberry")->
                     children()->
@@ -148,7 +146,7 @@ class Configuration implements ConfigurationInterface
      */
     protected function addWindowsphone()
     {
-        $this->root->
+        $this->root-> /** @phpstan-ignore-line */
             children()->
                 arrayNode('windowsphone')->
                     children()->

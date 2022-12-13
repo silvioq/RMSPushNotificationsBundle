@@ -6,7 +6,7 @@ use RMS\PushNotificationsBundle\Device\Types,
     RMS\PushNotificationsBundle\Message\AndroidMessage,
     RMS\PushNotificationsBundle\Message\MessageInterface;
 
-class AndroidMessageTest extends \PHPUnit_Framework_TestCase
+class AndroidMessageTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreation()
     {

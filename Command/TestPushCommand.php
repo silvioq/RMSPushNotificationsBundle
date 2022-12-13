@@ -2,7 +2,7 @@
 
 namespace RMS\PushNotificationsBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 
 use Symfony\Component\Console\Input\InputArgument,
     Symfony\Component\Console\Input\InputInterface,
@@ -11,19 +11,26 @@ use Symfony\Component\Console\Input\InputArgument,
 use RMS\PushNotificationsBundle\Message as PushMessage,
     RMS\PushNotificationsBundle\Message\MessageInterface;
 
-class TestPushCommand extends ContainerAwareCommand
+use RMS\PushNotificationsBundle\Service\Notifications;
+
+class TestPushCommand extends Command
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $em;
+    /** @var Notifications */
+    private $notificationService;
+
+    public function __construct(Notifications $notificationService)
+    {
+        $this->notificationService = $notificationService;
+
+	parent::__construct();
+    }
 
     /**
      * Configures the console commnad
      *
      * @return void
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this
             ->setName("rms:test-push")
@@ -41,9 +48,8 @@ class TestPushCommand extends ContainerAwareCommand
      *
      * @param  InputInterface  $input  An InputInterface instance
      * @param  OutputInterface $output An OutputInterface instance
-     * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $token = $input->getArgument("token");
         $service = strtolower($input->getArgument("service"));
@@ -58,7 +64,7 @@ class TestPushCommand extends ContainerAwareCommand
         if (isset($tokenLengths[$service]) && strlen($token) != $tokenLengths[$service]) {
             $output->writeln("<error>Token should be " . $tokenLengths[$service] . "chars long, not " . strlen($token) . "</error>");
 
-            return;
+            return 1;
         }
 
         if ($payload == null) {
@@ -83,7 +89,7 @@ class TestPushCommand extends ContainerAwareCommand
             $msg->setMessage($input->getOption("text"));
         }
 
-        $result = $this->getContainer()->get("rms_push_notifications")->send($msg);
+        $result = $this->notificationService->send($msg);
         if ($result) {
             $output->writeln("<comment>Send successful</comment>");
         } else {
@@ -91,6 +97,8 @@ class TestPushCommand extends ContainerAwareCommand
         }
 
         $output->writeln("<comment>done</comment>");
+
+        return 0;
     }
 
     /**

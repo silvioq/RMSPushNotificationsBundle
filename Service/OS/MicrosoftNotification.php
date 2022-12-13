@@ -31,7 +31,7 @@ class MicrosoftNotification implements OSNotificationServiceInterface
      */
     public function __construct($timeout, $logger)
     {
-        $this->browser = new Browser(new Curl());
+        $this->browser = new Browser(new Curl(new \Nyholm\Psr7\Factory\Psr17Factory));
         $this->browser->getClient()->setVerifyPeer(false);
         $this->browser->getClient()->setTimeout($timeout);
         $this->logger = $logger;

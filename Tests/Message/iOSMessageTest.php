@@ -6,7 +6,7 @@ use RMS\PushNotificationsBundle\Device\Types,
     RMS\PushNotificationsBundle\Message\iOSMessage,
     RMS\PushNotificationsBundle\Message\MessageInterface;
 
-class iOSMessageTest extends \PHPUnit_Framework_TestCase
+class iOSMessageTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreation()
     {

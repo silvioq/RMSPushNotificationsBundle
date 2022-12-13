@@ -100,7 +100,7 @@ class AppleNotification implements OSNotificationServiceInterface, EventListener
     /**
      * Monolog logger
      *
-     * @var LoggerInterface
+     * @var ?LoggerInterface
      */
     protected $logger;
 
@@ -159,7 +159,6 @@ class AppleNotification implements OSNotificationServiceInterface, EventListener
     /**
      * Send a MDM or notification message
      *
-     * @param  \RMS\PushNotificationsBundle\Message\MessageInterface|\RMS\PushNotificationsBundle\Service\OS\MessageInterface $message
      * @throws \RuntimeException
      * @throws \RMS\PushNotificationsBundle\Exception\InvalidMessageTypeException
      * @return bool
@@ -188,7 +187,7 @@ class AppleNotification implements OSNotificationServiceInterface, EventListener
 
             $this->messages[$messageId] = $this->createMdmPayload($message->getToken(), $message->getPushMagicToken());
         } else {
-            $this->messages[$messageId] = $this->createPayload($messageId, $message->getExpiry(), $message->getDeviceIdentifier(), $message->getMessageBody());
+            $this->messages[$messageId] = $this->createPayload((int)$messageId, (string)$message->getExpiry(), $message->getDeviceIdentifier(), $message->getMessageBody());
         }
 
         $errors = $this->sendMessages($messageId, $apnURL);
@@ -203,7 +202,7 @@ class AppleNotification implements OSNotificationServiceInterface, EventListener
      * @param  string                                                             $apnURL
      * @throws \RuntimeException
      * @throws \RMS\PushNotificationsBundle\Exception\InvalidMessageTypeException
-     * @return int
+     * @return array<int, mixed>
      */
     protected function sendMessages($firstMessageId, $apnURL)
     {
@@ -279,7 +278,7 @@ class AppleNotification implements OSNotificationServiceInterface, EventListener
             $ctx = $this->getStreamContext();
             $this->apnStreams[$apnURL] = @stream_socket_client($apnURL, $err, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $ctx);
             if (!$this->apnStreams[$apnURL]) {
-                throw new \RuntimeException("Couldn't connect to APN server at $apnUrl. Error no $err: $errstr");
+                throw new \RuntimeException("Couldn't connect to APN server at $apnURL. Error no $err: $errstr");
             }
 
             // Reduce buffering and blocking
@@ -287,7 +286,7 @@ class AppleNotification implements OSNotificationServiceInterface, EventListener
                 stream_set_read_buffer($this->apnStreams[$apnURL], 6);
             }
             stream_set_write_buffer($this->apnStreams[$apnURL], 0);
-            stream_set_blocking($this->apnStreams[$apnURL], 0);
+            stream_set_blocking($this->apnStreams[$apnURL], false);
         }
 
         return $this->apnStreams[$apnURL];

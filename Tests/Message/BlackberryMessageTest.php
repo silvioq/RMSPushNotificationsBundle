@@ -6,7 +6,7 @@ use RMS\PushNotificationsBundle\Device\Types,
     RMS\PushNotificationsBundle\Message\BlackberryMessage,
     RMS\PushNotificationsBundle\Message\MessageInterface;
 
-class BlackberryMessageTest extends \PHPUnit_Framework_TestCase
+class BlackberryMessageTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreation()
     {

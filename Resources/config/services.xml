@@ -21,6 +21,12 @@
         <service id="rms_push_notifications.event_listener" class="%rms_push_notifications.event_listener.class%">
             <tag name="kernel.event_listener" event="kernel.terminate" method="onKernelTerminate" />
         </service>
+
+	<service id="rms_push_test" class="RMS\PushNotificationsBundle\Command\TestPushCommand">
+	    <argument>@rms_push_notifications</argument>
+            <tag name="console.command" />
+        </service>
+
     </services>
 
 </container>

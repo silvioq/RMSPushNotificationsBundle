@@ -6,7 +6,7 @@ use RMS\PushNotificationsBundle\Device\Types,
     RMS\PushNotificationsBundle\Message\WindowsphoneMessage,
     RMS\PushNotificationsBundle\Message\MessageInterface;
 
-class WindowsphoneMessageTest extends \PHPUnit_Framework_TestCase
+class WindowsphoneMessageTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreation()
     {

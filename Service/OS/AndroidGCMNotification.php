@@ -77,13 +77,17 @@ class AndroidGCMNotification implements OSNotificationServiceInterface
     {
         $this->useDryRun = $dryRun;
         $this->apiKey = $apiKey;
+        $factory = new \Nyholm\Psr7\Factory\Psr17Factory;
         if (!$client) {
-            $client = ($useMultiCurl ? new MultiCurl() : new Curl());
+            $options = [
+	        "verify" => false,
+		"timeout" => $timeout,
+	    ];
+            $client = ($useMultiCurl ? new MultiCurl($factory, $options) : new Curl($factory, $options));
         }
-        $client->setTimeout($timeout);
 
-        $this->browser = new Browser($client);
-        $this->browser->getClient()->setVerifyPeer(false);
+        /** @var Curl $client */
+        $this->browser = new Browser($client, $factory);
         $this->logger = $logger;
     }
 
@@ -141,10 +145,10 @@ class AndroidGCMNotification implements OSNotificationServiceInterface
 
         // Determine success
         foreach ($this->responses as $response) {
-            $message = json_decode($response->getContent());
+            $message = json_decode((string)$response->getBody());
             if ($message === null || $message->success == 0 || $message->failure > 0) {
                 if ($message == null) {
-                    $this->logger->error($response->getContent());
+                    $this->logger->error((string)$response->getBody());
                 } else {
                     foreach ($message->results as $result) {
                         if (isset($result->error)) {
