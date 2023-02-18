@@ -116,8 +116,8 @@ class AndroidFCMNotification implements OSNotificationServiceInterface
         }
 
         $headers = array(
-            "Authorization: key=".$this->apiKey,
-            "Content-Type: application/json",
+            "Authorization" => "key=".$this->apiKey,
+            "Content-Type" => "application/json",
         );
         $data    = array_merge(
             $message->getFCMOptions(),
