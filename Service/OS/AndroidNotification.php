@@ -5,7 +5,10 @@ namespace RMS\PushNotificationsBundle\Service\OS;
 use RMS\PushNotificationsBundle\Exception\InvalidMessageTypeException,
     RMS\PushNotificationsBundle\Message\AndroidMessage,
     RMS\PushNotificationsBundle\Message\MessageInterface;
-use Buzz\Browser;
+use Buzz\Browser,
+    Buzz\Client\AbstractCurl,
+    Buzz\Client\Curl,
+    Buzz\Client\MultiCurl;
 
 class AndroidNotification implements OSNotificationServiceInterface
 {
@@ -77,15 +80,19 @@ class AndroidNotification implements OSNotificationServiceInterface
         }
 
         if ($this->getAuthToken()) {
-            $headers[] = "Authorization: GoogleLogin auth=" . $this->authToken;
+            $headers = ["Authorization" => "GoogleLogin auth=" . $this->authToken];
             $data = $message->getMessageBody();
 
-            $buzz = new Browser();
-            $buzz->getClient()->setVerifyPeer(false);
-            $buzz->getClient()->setTimeout($this->timeout);
+            $factory = new \Nyholm\Psr7\Factory\Psr17Factory;
+            $options = [
+	        "verify" => false,
+	        "timeout" => $this->timeout,
+	    ];
+            $client = new Curl($factory, $options);
+            $buzz = new Browser($client, $factory);
             $response = $buzz->post("https://android.apis.google.com/c2dm/send", $headers, http_build_query($data));
 
-            return preg_match("/^id=/", $response->getContent()) > 0;
+            return preg_match("/^id=/", (string)$response->getBody()) > 0;
         }
 
         return false;
@@ -106,15 +113,19 @@ class AndroidNotification implements OSNotificationServiceInterface
             "service"       => "ac2dm"
         );
 
-        $buzz = new Browser();
-        $buzz->getClient()->setVerifyPeer(false);
-        $buzz->getClient()->setTimeout($this->timeout);
+        $factory = new \Nyholm\Psr7\Factory\Psr17Factory;
+        $options = [
+	    "verify" => false,
+	    "timeout" => $this->timeout,
+	];
+        $client = new Curl($factory, $options);
+        $buzz = new Browser($client, $factory);
         $response = $buzz->post("https://www.google.com/accounts/ClientLogin", array(), http_build_query($data));
         if ($response->getStatusCode() !== 200) {
             return false;
         }
 
-        preg_match("/Auth=([a-z0-9_\-]+)/i", $response->getContent(), $matches);
+        preg_match("/Auth=([a-z0-9_\-]+)/i", (string)$response->getBody(), $matches);
         $this->authToken = $matches[1];
 
         return true;
