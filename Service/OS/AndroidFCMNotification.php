@@ -65,24 +65,17 @@ class AndroidFCMNotification implements OSNotificationServiceInterface
 
     /**
      * Constructor
-     *
-     * @param string $apiKey
-     * @param bool $useMultiCurl
-     * @param int $timeout
-     * @param LoggerInterface $logger
-     * @param AbstractCurl $client (optional)
-     * @param bool $dryRun
      */
-    public function __construct($apiKey, $useMultiCurl, $timeout, $logger, AbstractCurl $client = null, $dryRun = false)
+    public function __construct(string $apiKey, bool $useMultiCurl, int $timeout, LoggerInterface $logger, AbstractCurl|null $client = null, $dryRun = false)
     {
         $this->useDryRun = $dryRun;
         $this->apiKey    = $apiKey;
         $factory = new \Nyholm\Psr7\Factory\Psr17Factory;
         if (!$client) {
             $options = [
-	        "verify" => false,
-		"timeout" => $timeout,
-	    ];
+                "verify" => false,
+        		"timeout" => $timeout,
+	        ];
             $client = ($useMultiCurl ? new MultiCurl($factory, $options) : new Curl($factory, $options));
         }
 

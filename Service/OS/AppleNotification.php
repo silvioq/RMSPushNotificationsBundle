@@ -123,10 +123,10 @@ class AppleNotification implements OSNotificationServiceInterface, EventListener
      * @param bool          $jsonUnescapedUnicode
      * @param int           $timeout
      * @param string        $cachedir
-     * @param EventListener $eventListener
+     * @param ?EventListener $eventListener
      * @param LoggerInterface $logger
      */
-    public function __construct($sandbox, $pem, $passphrase = "", $jsonUnescapedUnicode = FALSE, $timeout = 60, $cachedir = "", EventListener $eventListener = null, $logger = null)
+    public function __construct($sandbox, $pem, $passphrase = "", $jsonUnescapedUnicode = FALSE, $timeout = 60, $cachedir = "", ?EventListener $eventListener = null, $logger = null)
     {
         $this->useSandbox = $sandbox;
         $this->pemPath = $pem;
@@ -356,12 +356,12 @@ class AppleNotification implements OSNotificationServiceInterface, EventListener
     {
         if ($this->jsonUnescapedUnicode) {
             // Validate PHP version
-            if (!version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            /*if (!version_compare(PHP_VERSION, '5.4.0', '>=')) {
                 throw new \LogicException(sprintf(
                     'Can\'t use JSON_UNESCAPED_UNICODE option on PHP %s. Support PHP >= 5.4.0',
                     PHP_VERSION
                 ));
-            }
+            }*/
 
             // WARNING:
             // Set otpion JSON_UNESCAPED_UNICODE is violation

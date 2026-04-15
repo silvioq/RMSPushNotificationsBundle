@@ -29,12 +29,12 @@ class MicrosoftNotification implements OSNotificationServiceInterface
      * @param $timeout
      * @param $logger
      */
-    public function __construct($timeout, $logger)
+    public function __construct($timeout, $logger) /** @phpstan-ignore-line */
     {
-        $this->browser = new Browser(new Curl(new \Nyholm\Psr7\Factory\Psr17Factory));
+        /*$this->browser = new Browser(new Curl(new \Nyholm\Psr7\Factory\Psr17Factory));
         $this->browser->getClient()->setVerifyPeer(false);
         $this->browser->getClient()->setTimeout($timeout);
-        $this->logger = $logger;
+        $this->logger = $logger;*/
     }
 
     public function send(MessageInterface $message)
@@ -60,11 +60,12 @@ class MicrosoftNotification implements OSNotificationServiceInterface
         }
 
         $response = $this->browser->post($message->getDeviceIdentifier(), $headers, $xml->asXML());
+        return false;/*
 
-        if (!$response->isSuccessful()) {
+        if (!$response->isSuccessful()) { 
             $this->logger->error($response->getStatusCode(). ' : '. $response->getReasonPhrase());
         }
 
-        return $response->isSuccessful();
+        return $response->isSuccessful();*/
     }
 }

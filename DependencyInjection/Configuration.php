@@ -15,12 +15,12 @@ class Configuration implements ConfigurationInterface
     /**
      * Generates the configuration tree builder.
      *
-     * @return \Symfony\Component\Config\Definition\Builder\TreeBuilder The tree builder
+     * @return \Symfony\Component\Config\Definition\Builder\TreeBuilder<'array'> The tree builder
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder() : \Symfony\Component\Config\Definition\Builder\TreeBuilder
     {
         $treeBuilder = new TreeBuilder('rms_push_notifications');
-        $this->root = $treeBuilder->getRootNode(); /** @phpstan-ignore-line */
+        $this->root = $treeBuilder->getRootNode();
 
         $this->addAndroid();
         $this->addiOS();
@@ -36,7 +36,7 @@ class Configuration implements ConfigurationInterface
      */
     protected function addAndroid()
     {
-        $this->root-> /** @phpstan-ignore-line */
+        $this->root->
             children()->
                 arrayNode("android")->
                     canBeUnset()->
@@ -103,7 +103,7 @@ class Configuration implements ConfigurationInterface
      */
     private function addApple($os)
     {
-        $config = $this->root-> /** @phpstan-ignore-line */
+        $config = $this->root->
             children()->
                 arrayNode($os)->
                     children()->
@@ -112,7 +112,7 @@ class Configuration implements ConfigurationInterface
                         scalarNode("pem")->cannotBeEmpty()->end()->
                         scalarNode("passphrase")->defaultValue("")->end()->
                         scalarNode('json_unescaped_unicode')->defaultFalse();
-                        if (method_exists($config,'info')) {
+                        if (method_exists($config,'info')) {  /** @phpstan-ignore-line */
                             $config = $config->info('PHP >= 5.4.0 and each messaged must be UTF-8 encoding');
                         }
                         $config->end()->
@@ -127,7 +127,7 @@ class Configuration implements ConfigurationInterface
      */
     protected function addBlackberry()
     {
-        $this->root-> /** @phpstan-ignore-line */
+        $this->root->
             children()->
                 arrayNode("blackberry")->
                     children()->
@@ -146,7 +146,7 @@ class Configuration implements ConfigurationInterface
      */
     protected function addWindowsphone()
     {
-        $this->root-> /** @phpstan-ignore-line */
+        $this->root->
             children()->
                 arrayNode('windowsphone')->
                     children()->

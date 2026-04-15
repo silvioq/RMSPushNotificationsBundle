@@ -70,10 +70,10 @@ class AndroidGCMNotification implements OSNotificationServiceInterface
      * @param bool         $useMultiCurl
      * @param int          $timeout
      * @param LoggerInterface $logger
-     * @param AbstractCurl $client (optional)
+     * @param ?AbstractCurl $client (optional)
      * @param bool         $dryRun
      */
-    public function __construct($apiKey, $useMultiCurl, $timeout, $logger, AbstractCurl $client = null, $dryRun = false)
+    public function __construct($apiKey, $useMultiCurl, $timeout, $logger, ?AbstractCurl $client = null, $dryRun = false)
     {
         $this->useDryRun = $dryRun;
         $this->apiKey = $apiKey;

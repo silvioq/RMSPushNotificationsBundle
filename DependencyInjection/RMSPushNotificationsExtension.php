@@ -27,7 +27,7 @@ class RMSPushNotificationsExtension extends Extension
      *
      * @return void
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container) : void
     {
         $this->container = $container;
         $this->kernelRootDir = $container->getParameterBag()->get("kernel.project_dir");
@@ -180,19 +180,6 @@ class RMSPushNotificationsExtension extends Extension
             } else {
                 // path isn't valid
                 throw new \RuntimeException(sprintf('Pem file "%s" not found.', $config[$os]["pem"]));
-            }
-        }
-
-        if ($config[$os]['json_unescaped_unicode']) {
-            // Not support JSON_UNESCAPED_UNICODE option
-            if (!version_compare(PHP_VERSION, '5.4.0', '>=')) {
-                throw new \LogicException(
-                    sprintf(
-                        'Can\'t use JSON_UNESCAPED_UNICODE option. ' .
-                        'This option can use only PHP Version >= 5.4.0. Your version: %s',
-                        PHP_VERSION
-                    )
-                );
             }
         }
 

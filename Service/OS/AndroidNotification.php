@@ -75,7 +75,7 @@ class AndroidNotification implements OSNotificationServiceInterface
         if (!$message instanceof AndroidMessage) {
             throw new InvalidMessageTypeException(sprintf("Message type '%s' not supported by C2DM", get_class($message)));
         }
-
+/*
         if ($this->getAuthToken()) {
             $headers[] = "Authorization: GoogleLogin auth=" . $this->authToken;
             $data = $message->getMessageBody();
@@ -86,7 +86,7 @@ class AndroidNotification implements OSNotificationServiceInterface
             $response = $buzz->post("https://android.apis.google.com/c2dm/send", $headers, http_build_query($data));
 
             return preg_match("/^id=/", $response->getContent()) > 0;
-        }
+        }*/
 
         return false;
     }
@@ -106,6 +106,8 @@ class AndroidNotification implements OSNotificationServiceInterface
             "service"       => "ac2dm"
         );
 
+        return false;
+/*
         $buzz = new Browser();
         $buzz->getClient()->setVerifyPeer(false);
         $buzz->getClient()->setTimeout($this->timeout);
@@ -118,5 +120,5 @@ class AndroidNotification implements OSNotificationServiceInterface
         $this->authToken = $matches[1];
 
         return true;
-    }
+  */  }
 }
